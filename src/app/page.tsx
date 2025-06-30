@@ -291,9 +291,9 @@ export default function App() {
             const profilesResponse = await fetch(LATEST_TOKENS_API);
             if (!profilesResponse.ok) throw new Error('Failed to fetch token profiles');
             const profilesData = await profilesResponse.json();
-            const solanaProfiles = profilesData.filter((p: any) => p.chainId === 'solana').slice(0, 50);        
-            const tokenAddresses = solanaProfiles.map((p: any) => p.tokenAddress);
-            if (tokenAddresses.length === 0) {
+            const solanaProfiles = profilesData.filter((p: any) => p.chainId === 'solana').slice(0, 50);           
+            const tokenAddresses = solanaProfiles.map((p: any) => p.tokenAddress); 
+                       if (tokenAddresses.length === 0) {
                 setTokens([]);
                 setLoading(false);
                 return;
