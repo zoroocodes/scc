@@ -60,7 +60,7 @@ const generateTokenAnalysis = (token: any) => {
         reasons.push({text: `Trending on launch (${totalTraders} traders)`, points: -2});
     }
 
-    if (!token.links?.some(l => l.type?.toLowerCase() === 'twitter')) { score += 1; reasons.push({text: "No Twitter link", points: 1}); }
+    if (!token.links?.some((l: any) => l.type?.toLowerCase() === 'twitter')) { score += 1; reasons.push({text: "No Twitter link", points: 1}); }
     if (token.priceChange5m <= -20) { score += 2; reasons.push({text: `Dropped ${Math.abs(token.priceChange5m)}% in 5m`, points: 2}); }
     if (token.priceChange5m <= -80) isRugged = true;
     if (Math.abs(token.priceChange5m) >= VOLATILITY_THRESHOLD) isVolatile = true;
