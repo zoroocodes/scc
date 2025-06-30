@@ -26,21 +26,21 @@ const DEXSCREENER_TOKENS_API = 'https://api.dexscreener.com/latest/dex/tokens/';
 const HELIUS_API_URL = `https://mainnet.helius-rpc.com/?api-key=${HELIUS_API_KEY}`;
 
 // --- Helper Functions ---
-const formatNumber = (num) => {
+const formatNumber = (num: number | null | undefined): string => {
     if (num === null || num === undefined) return 'N/A';
-    if (num >= 1_000_000_000) return `$${(num / 1_000_000_000).toFixed(2)}B`;
-    if (num >= 1_000_000) return `$${(num / 1_000_000).toFixed(2)}M`;
-    if (num >= 1_000) return `$${(num / 1_000).toFixed(1)}K`;
-    return `$${num.toFixed(2)}`;
+    if (num >= 1_000_000_000) return `${(num / 1_000_000_000).toFixed(2)}B`;
+    if (num >= 1_000_000) return `${(num / 1_000_000).toFixed(2)}M`;
+    if (num >= 1_000) return `${(num / 1_000).toFixed(1)}K`;
+    return `${num.toFixed(2)}`;
 };
 
-const formatPrice = (price) => {
+const formatPrice = (price: number | null | undefined): string => {
     if (price === null || price === undefined) return 'N/A';
-    if (price < 0.000001) return `$${price.toExponential(2)}`;
-    return `$${price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 8 })}`;
+    if (price < 0.000001) return `${price.toExponential(2)}`;
+    return `${price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 8 })}`;
 };
 
-const generateTokenAnalysis = (token) => {
+const generateTokenAnalysis = (token: any) => {
     let score = 0;
     const reasons = [];
     let isNewborn = false, isRugged = false, isTrending = false, isVolatile = false;
@@ -74,7 +74,7 @@ const generateTokenAnalysis = (token) => {
 };
 
 // --- Child Components ---
-const FudScoreDisplay = ({ score }) => {
+const FudScoreDisplay = ({ score }: { score: number }) => {
     const getScoreStyle = () => {
         if (score >= 11) return { bg: 'bg-red-500', text: 'text-red-100' };
         if (score >= 6) return { bg: 'bg-yellow-500', text: 'text-yellow-100' };
@@ -98,7 +98,7 @@ const FudScoreDisplay = ({ score }) => {
     );
 };
 
-const FudBreakdownModal = ({ token, onClose }) => {
+const FudBreakdownModal = ({ token, onClose }: { token: any; onClose: () => void }) => {
     if (!token) return null;
     const { score, reasons } = token.analysis;
     const getScoreStyle = () => {
@@ -128,9 +128,9 @@ const FudBreakdownModal = ({ token, onClose }) => {
     );
 };
 
-const TokenTag = ({ text, color, icon }) => ( <span className={`inline-flex items-center text-xs font-semibold px-2 py-0.5 rounded-full mr-2 ${color}`}>{icon} {text}</span> );
+const TokenTag = ({ text, color, icon }: { text: string; color: string; icon?: React.ReactNode }) => ( <span className={`inline-flex items-center text-xs font-semibold px-2 py-0.5 rounded-full mr-2 ${color}`}>{icon} {text}</span> );
 
-const Navbar = ({ lastUpdated, countdown }) => {
+const Navbar = ({ lastUpdated, countdown }: { lastUpdated: Date; countdown: number }) => {
     const [isClient, setIsClient] = useState(false);
     useEffect(() => { setIsClient(true) }, []);
 
@@ -156,7 +156,12 @@ const Navbar = ({ lastUpdated, countdown }) => {
     );
 };
 
-const FilterControls = ({ activeFilter, setFilter, hideLowMc, setHideLowMc }) => {
+const FilterControls = ({ activeFilter, setFilter, hideLowMc, setHideLowMc }: { 
+    activeFilter: string; 
+    setFilter: (filter: string) => void; 
+    hideLowMc: boolean; 
+    setHideLowMc: (hide: boolean) => void; 
+}) => {
     const filters = ["All", "Low FUD", "Medium FUD", "High FUD", "Pumping", "Dumping"];
     return (
         <div className="mb-4 flex flex-wrap items-center gap-2">
@@ -186,7 +191,7 @@ const FilterControls = ({ activeFilter, setFilter, hideLowMc, setHideLowMc }) =>
     );
 };
 
-const Sparkline = ({ data, isPositive }) => {
+const Sparkline = ({ data, isPositive }: { data: number[]; isPositive: boolean }) => {
     if (!data || data.length < 2) return null;
     const width = 50; const height = 16;
     const max = Math.max(...data); const min = Math.min(...data);
@@ -236,7 +241,7 @@ const FudCard = React.forwardRef(({ token }, ref) => {
 });
 FudCard.displayName = 'FudCard';
 
-const ShareModal = ({ token, onClose }) => {
+const ShareModal = ({ token, onClose }: { token: any; onClose: () => void }) => {
     const cardRef = useRef();
 
     const handleDownload = useCallback(() => {
