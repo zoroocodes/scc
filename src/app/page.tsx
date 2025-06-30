@@ -251,7 +251,8 @@ const FudCard = React.forwardRef<HTMLDivElement, { token: any }>(({ token }, ref
 FudCard.displayName = 'FudCard';
 
 const ShareModal = ({ token, onClose }: { token: any; onClose: () => void }) => {
-  const cardRef = useRef<HTMLDivElement>(null);
+    const cardRef = useRef<HTMLDivElement>(null);
+
     const handleDownload = useCallback(() => {
         // Simplified download - just show alert in this environment
         alert('Download feature would work with html-to-image library in production');
@@ -273,13 +274,13 @@ const ShareModal = ({ token, onClose }: { token: any; onClose: () => void }) => 
 
 // --- Main App Component ---
 export default function App() {
-    const [tokens, setTokens] = useState([]);
+    const [tokens, setTokens] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const [error, setError] = useState<string | null>(null);
     const [lastUpdated, setLastUpdated] = useState(new Date());
     const [countdown, setCountdown] = useState(REFRESH_INTERVAL_SECONDS);
-    const [modalToken, setModalToken] = useState(null);
-    const [shareModalToken, setShareModalToken] = useState(null);
+    const [modalToken, setModalToken] = useState<any>(null);
+    const [shareModalToken, setShareModalToken] = useState<any>(null);
     const [activeFilter, setFilter] = useState("All");
     const [hideLowMc, setHideLowMc] = useState(false);
 
@@ -291,9 +292,10 @@ export default function App() {
             const profilesResponse = await fetch(LATEST_TOKENS_API);
             if (!profilesResponse.ok) throw new Error('Failed to fetch token profiles');
             const profilesData = await profilesResponse.json();
-            const solanaProfiles = profilesData.filter((p: any) => p.chainId === 'solana').slice(0, 50);           
-            const tokenAddresses = solanaProfiles.map((p: any) => p.tokenAddress); 
-                       if (tokenAddresses.length === 0) {
+            const solanaProfiles = profilesData.filter((p: any) => p.chainId === 'solana').slice(0, 50);
+            const tokenAddresses = solanaProfiles.map((p: any) => p.tokenAddress);
+
+            if (tokenAddresses.length === 0) {
                 setTokens([]);
                 setLoading(false);
                 return;
@@ -302,7 +304,7 @@ export default function App() {
             // Fetch financial data from DexScreener
             const financialResponse = await fetch(`${DEXSCREENER_TOKENS_API}${tokenAddresses.join(',')}`);
             const financialData = await financialResponse.json();
-            const financialDataMap = (financialData.pairs || []).reduce((acc, pair) => {
+            const financialDataMap = (financialData.pairs || []).reduce((acc: any, pair: any) => {
                 if (!acc[pair.baseToken.address]) {
                     acc[pair.baseToken.address] = pair;
                 }
@@ -321,7 +323,7 @@ export default function App() {
                 }) 
             });
             const heliusData = await heliusResponse.json();
-            const metadataMap = (heliusData.result || []).reduce((acc, asset) => { 
+            const metadataMap = (heliusData.result || []).reduce((acc: any, asset: any) => { 
                 if (asset) acc[asset.id] = { 
                     supply: asset.token_info ? asset.token_info.supply / Math.pow(10, asset.token_info.decimals) : null, 
                     mintedAt: asset.content?.metadata?.created_at || null 
@@ -330,12 +332,12 @@ export default function App() {
             }, {});
 
             // Generate centralization data (simulate for now)
-            const centralizedMap = tokenAddresses.reduce((acc, addr) => { 
+            const centralizedMap = tokenAddresses.reduce((acc: any, addr: any) => { 
                 acc[addr] = Math.random() > 0.9; 
                 return acc; 
             }, {});
 
-            const combinedTokens = solanaProfiles.map(profile => {
+            const combinedTokens = solanaProfiles.map((profile: any) => {
                 const financialInfo = financialDataMap[profile.tokenAddress] || {};
                 const metadata = metadataMap[profile.tokenAddress] || {};
                 const marketCap = financialInfo.priceUsd && metadata.supply ? parseFloat(financialInfo.priceUsd) * metadata.supply : null;
@@ -363,7 +365,7 @@ export default function App() {
 
             setTokens(combinedTokens);
             setLastUpdated(new Date());
-        } catch (err) { 
+        } catch (err: any) { 
             setError(err.message); 
         } finally { 
             setLoading(false); 
@@ -378,11 +380,11 @@ export default function App() {
     
     useEffect(() => { 
         setCountdown(REFRESH_INTERVAL_SECONDS); 
-        const t = setInterval(() => setCountdown(p => (p > 1 ? p - 1 : REFRESH_INTERVAL_SECONDS)), 1000); 
+        const t = setInterval(() => setCountdown((p: number) => (p > 1 ? p - 1 : REFRESH_INTERVAL_SECONDS)), 1000); 
         return () => clearInterval(t); 
     }, [lastUpdated]);
     
-    const filteredTokens = tokens.filter(token => {
+    const filteredTokens = tokens.filter((token: any) => {
         if (hideLowMc && (token.marketCap === null || token.marketCap < LOW_MC_THRESHOLD)) { return false; }
         if (activeFilter === "All") return true;
         const score = token.analysis.score;
@@ -425,7 +427,7 @@ export default function App() {
                     <table className="min-w-full">
                         <thead className="bg-slate-800/50">
                             <tr className="border-b-2 border-slate-700/50">
-                                {['Token', 'Price', 'Change (5m)', 'Volume (24h)', 'Liquidity', 'Market Cap', 'FUD Score', 'Links'].map(h => ( 
+                                {['Token', 'Price', 'Change (5m)', 'Volume (24h)', 'Liquidity', 'Market Cap', 'FUD Score', 'Links'].map((h: string) => ( 
                                     <th key={h} className={`px-4 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wider ${h.includes('Token') ? 'text-left' : 'text-right'}`}>
                                         {h === 'FUD Score' ? <div className="text-center">FUD Score</div> : h}
                                     </th> 
@@ -435,7 +437,7 @@ export default function App() {
                         <tbody className="text-sm divide-y divide-slate-800">
                             {loading ? ( 
                                 <tr>
-                                    <td colSpan="8" className="text-center p-12">
+                                    <td colSpan={8} className="text-center p-12">
                                         <div className="flex justify-center items-center text-gray-400">
                                             <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
                                             <span className="ml-3">Loading Tokens...</span>
@@ -443,7 +445,7 @@ export default function App() {
                                     </td>
                                 </tr>
                             ) : (
-                                filteredTokens.length > 0 ? filteredTokens.map((token) => {
+                                filteredTokens.length > 0 ? filteredTokens.map((token: any) => {
                                     const { isNewborn, isRugged, isCentralized, isTrending, isVolatile, score } = token.analysis;
                                     const priceChange = token.priceChange5m;
                                     const priceChangeColor = priceChange > 0 ? 'text-green-400' : priceChange < 0 ? 'text-red-400' : 'text-gray-500';
@@ -504,7 +506,7 @@ export default function App() {
                                             <td className="px-4 py-3">
                                                 <div className="flex justify-end items-center space-x-3">
                                                     {socialLinks.map(({ type, Icon, title }) => { 
-                                                        const link = token.links?.find(l => l.type?.toLowerCase() === type); 
+                                                        const link = token.links?.find((l: any) => l.type?.toLowerCase() === type); 
                                                         return link && (
                                                             <a 
                                                                 key={type} 
@@ -540,7 +542,7 @@ export default function App() {
                                     );
                                 }) : ( 
                                     <tr>
-                                        <td colSpan="8" className="text-center p-12 text-gray-500">
+                                        <td colSpan={8} className="text-center p-12 text-gray-500">
                                             No tokens match the current filter.
                                         </td>
                                     </tr> 
