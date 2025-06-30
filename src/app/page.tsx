@@ -200,7 +200,7 @@ const Sparkline = ({ data, isPositive }: { data: number[]; isPositive: boolean }
     return ( <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} className="inline-block ml-2 opacity-50"><polyline fill="none" stroke={isPositive ? "#22c55e" : "#ef4444"} strokeWidth="1.5" points={points} /></svg> );
 };
 
-const FudCard = React.forwardRef(({ token }, ref) => {
+const FudCard = React.forwardRef<HTMLDivElement, { token: any }>(({ token }, ref) => {
     if (!token) return null;
     const { score } = token.analysis;
     const getScoreStyle = () => {
