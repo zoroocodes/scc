@@ -118,7 +118,7 @@ const FudBreakdownModal = ({ token, onClose }: { token: any; onClose: () => void
                     <h4 className="font-semibold text-gray-300 mb-2">FUD Score Breakdown:</h4>
                     {reasons.length > 0 ? (
                         <ul className="list-none space-y-2">
-                            {reasons.map((reason, i) => <li key={i} className={`flex justify-between items-center bg-slate-700/50 p-2 rounded-md ${reason.points < 0 ? 'text-green-300' : 'text-gray-300'}`}><span>{reason.text}</span><span className={`font-mono font-semibold ${reason.points < 0 ? 'text-green-400' : 'text-gray-400'}`}>{reason.points > 0 ? `+${reason.points}`: reason.points}</span></li>)}
+                            {reasons.map((reason: any, i: number) => <li key={i} className={`flex justify-between items-center bg-slate-700/50 p-2 rounded-md ${reason.points < 0 ? 'text-green-300' : 'text-gray-300'}`}><span>{reason.text}</span><span className={`font-mono font-semibold ${reason.points < 0 ? 'text-green-400' : 'text-gray-400'}`}>{reason.points > 0 ? `+${reason.points}`: reason.points}</span></li>)}
                         </ul>
                     ) : ( <p className="text-gray-400 mt-2">No FUD factors detected. Looking safe!</p> )}
                 </div>
