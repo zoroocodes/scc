@@ -251,8 +251,7 @@ const FudCard = React.forwardRef<HTMLDivElement, { token: any }>(({ token }, ref
 FudCard.displayName = 'FudCard';
 
 const ShareModal = ({ token, onClose }: { token: any; onClose: () => void }) => {
-    const cardRef = useRef();
-
+  const cardRef = useRef<HTMLDivElement>(null);
     const handleDownload = useCallback(() => {
         // Simplified download - just show alert in this environment
         alert('Download feature would work with html-to-image library in production');
