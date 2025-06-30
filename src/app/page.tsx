@@ -213,7 +213,16 @@ const FudCard = React.forwardRef<HTMLDivElement, { token: any }>(({ token }, ref
         <div ref={ref} className="w-[400px] bg-slate-900 border border-slate-700 rounded-2xl p-6 font-sans text-white" style={{ background: 'radial-gradient(circle at top, #1e293b, #0f172a, #020617)' }}>
             <div className="flex justify-between items-start">
                 <div className="flex items-center">
-                    <img className="w-16 h-16 rounded-full" src={token.icon} alt={`${token.name} icon`} onError={(e) => { e.target.onerror = null; e.target.src='https://placehold.co/64x64/1e293b/94a3b8?text=?'; }} />
+                    <img 
+                        className="w-16 h-16 rounded-full" 
+                        src={token.icon} 
+                        alt={`${token.name} icon`} 
+                        onError={(e) => { 
+                            const target = e.target as HTMLImageElement;
+                            target.onerror = null; 
+                            target.src = 'https://placehold.co/64x64/1e293b/94a3b8?text=?'; 
+                        }} 
+                    />
                     <div className="ml-4">
                         <h2 className="text-2xl font-bold">{token.name || 'N/A'}</h2>
                         <p className="text-lg text-gray-400">{token.symbol || 'N/A'}</p>
@@ -453,8 +462,9 @@ export default function App() {
                                                         src={token.icon} 
                                                         alt="" 
                                                         onError={(e) => { 
-                                                            e.target.onerror = null; 
-                                                            e.target.src='https://placehold.co/36x36/1e293b/94a3b8?text=?'; 
+                                                            const target = e.target as HTMLImageElement;
+                                                            target.onerror = null; 
+                                                            target.src = 'https://placehold.co/36x36/1e293b/94a3b8?text=?'; 
                                                         }} 
                                                     />
                                                     <div className="ml-3">
